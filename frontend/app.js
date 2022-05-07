@@ -2,14 +2,15 @@ import './styles/App.css'
 import twitterLogo from './assets/twitter-logo.svg'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
-import myEpicNft from './utils/MyEpicNFT.json' // Here u Erc721 contract
+import myEpicNft from './utils/MyEpicNFT.json'
 
 const TWITTER_HANDLE = 'atanalirabi'
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`
 const OPENSEA_LINK = ''
 const TOTAL_MINT_COUNT = 50
 
-const CONTRACT_ADDRESS = CONTRACT_ADDRESS
+// I moved the contract address to the top for easy access.
+const CONTRACT_ADDRESS = '0x76768E14f9D04251915724bd06c0628654D08dcc'
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState('')
@@ -31,6 +32,8 @@ const App = () => {
       console.log('Found an authorized account:', account)
       setCurrentAccount(account)
 
+      // Setup listener! This is for the case where a user comes to our site
+      // and ALREADY had their wallet connected + authorized.
       setupEventListener()
     } else {
       console.log('No authorized account found')
@@ -50,6 +53,7 @@ const App = () => {
       let chainId = await ethereum.request({ method: 'eth_chainId' })
       console.log('Connected to chain ' + chainId)
 
+      // String, hex code of the chainId of the Rinkebey test network
       const rinkebyChainId = '0x4'
       if (chainId !== rinkebyChainId) {
         alert('You are not connected to the Rinkeby Test Network!')
@@ -57,17 +61,22 @@ const App = () => {
       console.log('Connected', accounts[0])
       setCurrentAccount(accounts[0])
 
+      // Setup listener! This is for the case where a user comes to our site
+      // and connected their wallet for the first time.
       setupEventListener()
     } catch (error) {
       console.log(error)
     }
   }
 
+  // Setup our listener.
   const setupEventListener = async () => {
+    // Most of this looks the same as our function askContractToMintNft
     try {
       const { ethereum } = window
 
       if (ethereum) {
+        // Same stuff again
         const provider = new ethers.providers.Web3Provider(ethereum)
         const signer = provider.getSigner()
         const connectedContract = new ethers.Contract(
@@ -76,6 +85,9 @@ const App = () => {
           signer
         )
 
+        // THIS IS THE MAGIC SAUCE.
+        // This will essentially "capture" our event when our contract throws it.
+        // If you're familiar with webhooks, it's very similar to that!
         connectedContract.on('NewEpicNFTMinted', (from, tokenId) => {
           console.log(from, tokenId.toNumber())
           alert(
@@ -111,6 +123,18 @@ const App = () => {
         console.log('Mining...please wait.')
         await nftTxn.wait()
         console.log(nftTxn)
+        if (nftTxn.wait) {
+          return (
+            <div>
+              <p>Minting NFT...</p>
+              <p>Please wait...</p>
+              <p>
+                Mined, see transaction: https://rinkeby.etherscan.io/tx/
+                {nftTxn.hash}
+              </p>
+            </div>
+          )
+        }
         console.log(
           `Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`
         )

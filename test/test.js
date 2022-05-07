@@ -12,7 +12,7 @@ const OPENSEA_LINK = ''
 const TOTAL_MINT_COUNT = 50
 
 // I moved the contract address to the top for easy access.
-const CONTRACT_ADDRESS = CONTRACT_ADDRESS_KEY
+const CONTRACT_ADDRESS = 0x76768e14f9d04251915724bd06c0628654d08dcc
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState('')
