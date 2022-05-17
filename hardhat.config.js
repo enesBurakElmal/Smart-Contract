@@ -10,6 +10,7 @@ module.exports = {
       accounts: [process.env.RINKEBY_PRIVATE_KEY],
     },
     mainnet: {
+      chainId: 1,
       url: process.env.ALCHEMY_API_KEY_URL,
       accounts: [process.env.RINKEBY_PRIVATE_KEY],
     },

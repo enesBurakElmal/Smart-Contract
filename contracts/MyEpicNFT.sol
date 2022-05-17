@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.1;
 
 // We need some util functions for strings.
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -21,11 +21,11 @@ contract MyEpicNFT is ERC721URIStorage {
   string[] firstWords = ["DARIUS-", "RENEKTON-", "VOLIBEAR-", "GANGPLANK-", "WUKONG-", "RENGAR-" , "TEEMO-"];
   string[] secondWords = ["SHACO-", "VI-", "RAMMUS-", "HECARIM-", "AMUMU-", "WARWICK-", "SEJUANI-"];
   string[] thirdWords = ["AHRI-", "VEIGAR-", "YASUO-", "SYNDRA-", "MALZAHAR-", "AKALI-", "ZIGGS-"];
-    string[] fourthWords =  ["TRISTANA-", "CAITLYN-", "JHIN-", "JINX-", "ASHE-", "LUCIAN-", "VAYNE-"];
+  string[] fourthWords =  ["TRISTANA-", "CAITLYN-", "JHIN-", "JINX-", "ASHE-", "LUCIAN-", "VAYNE-"];
   string[] fifthWords =  ["JANNA", "ALISTAR", "LEONA", "BLITZCRANK", "MORGANA", "SONA", "SORAKA"];
 
-  constructor() ERC721 ("SquareNFT", "SQUARE") {
-    console.log("This is my NFT contract. Woah!");
+  constructor() ERC721 ("LoLNFT", "ForFun") {
+    console.log("League of Legends Your Comp. NFT Compiler");
   }
 
   function pickRandomFirstWord(uint256 tokenId) public view returns (string memory) {
@@ -95,10 +95,21 @@ contract MyEpicNFT is ERC721URIStorage {
         )
     );
 
+
+
     // Just like before, we prepend data:application/json;base64, to our data.
     string memory finalTokenUri = string(
         abi.encodePacked("data:application/json;base64,", json)
     );
+
+      function buyFinxterArt (uint256 tokenIds) public   {
+        require(msg.sender == address(0x0), "Only the contract owner can buy finxter art.");
+        require(tokenId < _tokenIds.current(), "Token ID is not valid.");
+        require(!_tokenIds.exists(tokenId), "Token ID already exists.");
+        _tokenIds.increment();
+        _tokenIds.put(tokenId, true);
+        emit NewEpicNFTMinted(msg.sender, tokenId);
+      }
 
  
 
@@ -111,7 +122,9 @@ contract MyEpicNFT is ERC721URIStorage {
 
     _safeMint(msg.sender, newItemId);
     
-    _setTokenURI(newItemId, "https://cloudflare-ipfs.com/ipfs/QmSZp35J33SjKF54DMfLoqvpKg7bvpQh75oDCEkqmgoazg");
+    _setTokenURI(newItemId, finalTokenUri);
+
+  
 
     _tokenIds.increment();
     console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
