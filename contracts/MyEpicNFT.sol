@@ -57,14 +57,18 @@ contract MyEpicNFT is ERC721URIStorage {
     rand = rand % fifthWords.length;
     return fifthWords[rand];
   }
-
-      event NewEpicNFTMinted(address sender, uint256 tokenId);
+  
+    event NewEpicNFTMinted(address sender, uint256 tokenId);
 
   function random(string memory input) internal pure returns (uint256) {
       return uint256(keccak256(abi.encodePacked(input)));
   }
+
+
+
+
  
-  function makeAnEpicNFT() public {
+  
     uint256 newItemId = _tokenIds.current();
 
     // We go and randomly grab one word from each of the three arrays.
@@ -73,8 +77,6 @@ contract MyEpicNFT is ERC721URIStorage {
     string memory third = pickRandomThirdWord(newItemId);
     string memory fourth = pickRandomFourthWords(newItemId);
     string memory fifth = pickRandomFifthWords(newItemId);
-
-
 
     string memory combinedWord = string(abi.encodePacked(first, second, third, fourth, fifth));
 
@@ -95,6 +97,7 @@ contract MyEpicNFT is ERC721URIStorage {
         )
     );
 
+      
 
 
     // Just like before, we prepend data:application/json;base64, to our data.
@@ -102,14 +105,7 @@ contract MyEpicNFT is ERC721URIStorage {
         abi.encodePacked("data:application/json;base64,", json)
     );
 
-      function buyFinxterArt (uint256 tokenIds) public   {
-        require(msg.sender == address(0x0), "Only the contract owner can buy finxter art.");
-        require(tokenId < _tokenIds.current(), "Token ID is not valid.");
-        require(!_tokenIds.exists(tokenId), "Token ID already exists.");
-        _tokenIds.increment();
-        _tokenIds.put(tokenId, true);
-        emit NewEpicNFTMinted(msg.sender, tokenId);
-      }
+    
 
  
 
@@ -130,4 +126,7 @@ contract MyEpicNFT is ERC721URIStorage {
     console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
     emit NewEpicNFTMinted(msg.sender, newItemId);
   }
+
+
+
 }
