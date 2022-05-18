@@ -15,6 +15,8 @@ contract MyEpicNFT is ERC721URIStorage {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
+    
+
   string baseSvg = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width='100%' height='100%' fill='black' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
   
   //  BASED NFT ITEMS HERE
@@ -28,10 +30,29 @@ contract MyEpicNFT is ERC721URIStorage {
     console.log("League of Legends Your Comp. NFT Compiler");
   }
 
+  function safeSell(address _to, uint256 _tokenId) public {
+    require(_to != address(0), "You cannot send to the 0 address");
+    require(_to != msg.sender, "You cannot send to yourself");
+    require(_tokenId > 0, "You cannot send 0 or negative tokenIds");
+    require(this.ownerOf(_tokenId) == msg.sender, "You cannot send a token you do not own");
+    address _from = msg.sender;
+    this.transferFrom(_from, _to, _tokenId);
+    console.log("You have sold your token!");
+  }
+
+  // function buyFinxterArt(uint256 _tokenId, address _to) public {
+  //   require(_to != address(0), "Invalid address");
+  //   require(_to != msg.sender, "Cannot send to yourself");
+  //   require(_tokenId > 0, "Invalid token ID");
+  //   // require(_tokenId <= _tokenId.current(this), "Invalid token ID");
+  //   require(ownerOf(_tokenId) == msg.sender, "You do not own this token");
+  //   // require(!this.exists(_tokenIds), "Token already exists");
+  // }
+
   function pickRandomFirstWord(uint256 tokenId) public view returns (string memory) {
     uint256 rand = random(string(abi.encodePacked("FIRST_WORD", Strings.toString(tokenId))));
     rand = rand % firstWords.length;
-    return firstWords[rand];
+    return firstWords[rand]; 
   }
 
   function pickRandomSecondWord(uint256 tokenId) public view returns (string memory) {
@@ -57,18 +78,14 @@ contract MyEpicNFT is ERC721URIStorage {
     rand = rand % fifthWords.length;
     return fifthWords[rand];
   }
-  
-    event NewEpicNFTMinted(address sender, uint256 tokenId);
+
+      event NewEpicNFTMinted(address sender, uint256 tokenId);
 
   function random(string memory input) internal pure returns (uint256) {
       return uint256(keccak256(abi.encodePacked(input)));
   }
-
-
-
-
  
-  
+  function makeAnEpicNFT() public {
     uint256 newItemId = _tokenIds.current();
 
     // We go and randomly grab one word from each of the three arrays.
@@ -97,20 +114,12 @@ contract MyEpicNFT is ERC721URIStorage {
         )
     );
 
-      
 
 
     // Just like before, we prepend data:application/json;base64, to our data.
     string memory finalTokenUri = string(
         abi.encodePacked("data:application/json;base64,", json)
     );
-
-    
-
- 
-
-
-    
 
     console.log("\n--------------------");
     console.log(  "https://nftpreview.0xdev.codes/?code=", finalTokenUri);
@@ -120,13 +129,10 @@ contract MyEpicNFT is ERC721URIStorage {
     
     _setTokenURI(newItemId, finalTokenUri);
 
-  
-
     _tokenIds.increment();
     console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
     emit NewEpicNFTMinted(msg.sender, newItemId);
   }
-
 
 
 }
