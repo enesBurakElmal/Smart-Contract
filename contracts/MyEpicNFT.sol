@@ -30,24 +30,21 @@ contract MyEpicNFT is ERC721URIStorage {
     console.log("League of Legends Your Comp. NFT Compiler");
   }
 
-  function safeSell(address _to, uint256 _tokenId) public {
-    require(_to != address(0), "You cannot send to the 0 address");
-    require(_to != msg.sender, "You cannot send to yourself");
-    require(_tokenId > 0, "You cannot send 0 or negative tokenIds");
-    require(this.ownerOf(_tokenId) == msg.sender, "You cannot send a token you do not own");
-    address _from = msg.sender;
-    this.transferFrom(_from, _to, _tokenId);
-    
+  uint256 public constant tokenPriceAmount = 1; // 0.5 ethers
+
+  mapping(uint256 => uint256) public tokenPrice; 
+
+    function safeSell (uint256 _tokenId, uint256 _price) public payable {
+    require(ownerOf(_tokenId) == msg.sender); // Only the owner can sell - satan kisi owner(bizim) oldugunu kontrol ediyoruz.
+    tokenPrice[_tokenId] = _price; // set a token price - tokenin fiyatini belirliyoruz.
+    approve(address(this), _tokenId); // approve the token to be sold - tokeni satis icin onayliyoruz.
   }
 
-  // function buyFinxterArt(uint256 _tokenId, address _to) public {
-  //   require(_to != address(0), "Invalid address");
-  //   require(_to != msg.sender, "Cannot send to yourself");
-  //   require(_tokenId > 0, "Invalid token ID");
-  //   // require(_tokenId <= _tokenId.current(this), "Invalid token ID");
-  //   require(ownerOf(_tokenId) == msg.sender, "You do not own this token");
-  //   // require(!this.exists(_tokenIds), "Token already exists");
-  // }
+  function safeBuy (uint256 _tokenId) public payable {
+    require(msg.value == tokenPrice[_tokenId]); // check if the price and price is correct - fiyati ve fiyatin dogrulugunu kontrol ediyoruz.
+    approve(address(this), _tokenId); // approve the token to be sold - tokeni satmak icin onayliyoruz.
+    }
+
 
   function pickRandomFirstWord(uint256 tokenId) public view returns (string memory) {
     uint256 rand = random(string(abi.encodePacked("FIRST_WORD", Strings.toString(tokenId))));
