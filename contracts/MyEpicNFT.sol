@@ -34,15 +34,18 @@ contract MyEpicNFT is ERC721URIStorage {
 
   mapping(uint256 => uint256) public tokenPrice; 
 
-    function safeSell (uint256 _tokenId, uint256 _price) public payable {
-    require(ownerOf(_tokenId) == msg.sender); // Only the owner can sell - satan kisi owner(bizim) oldugunu kontrol ediyoruz.
-    tokenPrice[_tokenId] = _price; // set a token price - tokenin fiyatini belirliyoruz.
-    approve(address(this), _tokenId); // approve the token to be sold - tokeni satis icin onayliyoruz.
+  // Functions supporting erc standards
+
+    function safeSell (uint256 _tokenId, uint256 _price) public payable {  // using "payable" for token transfer standarts. e.d.: there was a bug and the product crashed to 0 tokens. the request is denied. - token transfer standartlari icin "payable" kullaniyorum. ornek: herhangi bi bug olusur ve coin 0 token'a duserse islem oto reddedilir.
+    require(msg.value == tokenPrice[_tokenId]); // check if the price and price is correct - fiyati ve fiyatin dogrulugunu kontrol ediyoruz
+    require(ownerOf(_tokenId) == msg.sender); // Only the owner can sell - satan kisinin owner(bizim) oldugunu kontrol ediyoruz
+    tokenPrice[_tokenId] = _price; // set a token price - tokenin fiyatini belirliyoruz
+    approve(address(this), _tokenId); // approve the token to be sold - tokeni satis icin onayliyoruz
   }
 
-  function safeBuy (uint256 _tokenId) public payable {
-    require(msg.value == tokenPrice[_tokenId]); // check if the price and price is correct - fiyati ve fiyatin dogrulugunu kontrol ediyoruz.
-    approve(address(this), _tokenId); // approve the token to be sold - tokeni satmak icin onayliyoruz.
+  function safeBuy (uint256 _tokenId) public payable { // using "payable" for token transfer standarts. e.d.: there was a bug and the product crashed to 0 tokens. the request is denied. - token transfer standartlari icin "payable" kullaniyorum. ornek: herhangi bi bug olusur ve coin 0 token'a duserse islem oto reddedilir.
+    require(msg.value == tokenPrice[_tokenId]); // check if the price and price is correct - fiyati ve fiyatin dogrulugunu kontrol ediyoruz
+    approve(address(this), _tokenId); // approve the token to be sold - tokeni satmak icin onayliyoruz
     }
 
 
