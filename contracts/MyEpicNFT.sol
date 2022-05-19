@@ -37,7 +37,7 @@ contract MyEpicNFT is ERC721URIStorage {
     require(this.ownerOf(_tokenId) == msg.sender, "You cannot send a token you do not own");
     address _from = msg.sender;
     this.transferFrom(_from, _to, _tokenId);
-    console.log("You have sold your token!");
+    
   }
 
   // function buyFinxterArt(uint256 _tokenId, address _to) public {
