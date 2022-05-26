@@ -30,11 +30,7 @@ contract MyEpicNFT is ERC721URIStorage {
     console.log("League of Legends Your Comp. NFT Compiler");
   }
 
-  uint256 public constant tokenPriceAmount = 1; // 1 ethers
-
   mapping(uint256 => uint256) public tokenPrice;
-
-
 
   // Functions supporting erc standards
 
@@ -49,23 +45,14 @@ contract MyEpicNFT is ERC721URIStorage {
   event BuyTokens(address buyer, uint256 amountOfETH, uint256 amountOfTokens);
 
     function buyTokens() public payable returns (uint256 tokenAmount) {
-    uint256 amountToBuy = msg.value * tokensPerEth;
-
-    // cuzdanda yeterli ether yoksa islem reddedilir.
-    uint256 userBalance =  balanceOf(address(this));
-    require(userBalance >= amountToBuy, "Vendor contract has not enough tokens in its balance");
-
-    // tokeni msg.sender'a gonderiyoruz.
-    transferFrom(address(this), msg.sender, amountToBuy);
-
-    //  event emiteri ile tokenin satis bilgilerini gonderiyoruz.
-    emit BuyTokens(msg.sender, msg.value, amountToBuy);
-
+    uint256 amountToBuy = msg.value * tokensPerEth;  // tokenin fiyatini belirliyoruz
+    uint256 userBalance =  balanceOf(address(this)); // sozlesme cuzdaninda yeterli bakiye yoksa islem reddedilir.
+    require(userBalance >= amountToBuy, "The contract owner does not have enough balance");
+    transferFrom(address(this), msg.sender, amountToBuy); // tokeni kontrat sahibine cekiyoruz
+    emit BuyTokens(msg.sender, msg.value, amountToBuy); //  event emiteri ile tokeni sozlesme sahibine cekiyoruz
     return amountToBuy;
   }
-
-
-
+ 
 
   // function safeBuy (uint256 _tokenId) public payable { // using "payable" for token transfer standarts. e.g.: there was a bug and the product crashed to 0 tokens. the request is denied. - token transfer standartlari icin "payable" kullaniyorum. ornek: herhangi bi bug olusur ve coin 0 token'a duserse islem oto reddedilir.
   //   require(tokenPrice[_tokenId] >= msg.value); // check if the price and price is correct - fiyati ve fiyatin dogrulugunu kontrol ediyoruz
