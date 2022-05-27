@@ -31,6 +31,7 @@ contract MyEpicNFT is ERC721URIStorage {
   }
 
   mapping(uint256 => uint256) public tokenPrice;
+  mapping(address => uint256) public allowlist;
 
   // Functions supporting erc standards
 
@@ -47,9 +48,9 @@ contract MyEpicNFT is ERC721URIStorage {
     function buyTokens() public payable returns (uint256 tokenAmount) {
     uint256 amountToBuy = msg.value * tokensPerEth;  // tokenin fiyatini belirliyoruz
     uint256 userBalance =  balanceOf(address(this)); // sozlesme cuzdaninda yeterli bakiye yoksa islem reddedilir.
-    require(userBalance >= amountToBuy, "The contract owner does not have enough balance");
-    transferFrom(address(this), msg.sender, amountToBuy); // tokeni kontrat sahibine cekiyoruz
-    emit BuyTokens(msg.sender, msg.value, amountToBuy); //  event emiteri ile tokeni sozlesme sahibine cekiyoruz
+    require(userBalance >= amountToBuy, "The contract owner does not have enough balance"); // sozlesme cuzdaninda yeterli bakiye yoksa islem reddedilir.
+    transferFrom(address(this), msg.sender, amountToBuy); // tokeni sender'a transfer ediyoruz
+    emit BuyTokens(msg.sender, msg.value, amountToBuy); //  event emiteri ile nft'yi sozlesme sahibine cekiyoruz
     return amountToBuy;
   }
  
