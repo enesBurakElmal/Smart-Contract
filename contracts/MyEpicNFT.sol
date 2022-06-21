@@ -31,7 +31,7 @@ contract MyEpicNFT is ERC721URIStorage {
   }
 
   mapping(uint256 => uint256) public tokenPrice;
-  mapping(address => uint256) public allowlist;
+  mapping(address => uint256) public allowList;
 
   // Functions supporting erc standards
 
@@ -53,16 +53,6 @@ contract MyEpicNFT is ERC721URIStorage {
     emit BuyTokens(msg.sender, msg.value, amountToBuy); //  event emiteri ile nft'yi sozlesme sahibine cekiyoruz
     return amountToBuy;
   }
- 
-
-  // function safeBuy (uint256 _tokenId) public payable { // using "payable" for token transfer standarts. e.g.: there was a bug and the product crashed to 0 tokens. the request is denied. - token transfer standartlari icin "payable" kullaniyorum. ornek: herhangi bi bug olusur ve coin 0 token'a duserse islem oto reddedilir.
-  //   require(tokenPrice[_tokenId] >= msg.value); // check if the price and price is correct - fiyati ve fiyatin dogrulugunu kontrol ediyoruz
-  //   address from = msg.sender; // set the sender of the token - tokenin gonderenini belirliyoruz
-  //   address to = address(this) // set the owner of the token - tokenin owner(bizim) oldugunu kontrol ediyoruz
-  //   transferFrom(from, to, tokenId);
-  // }
-
- 
 
   function pickRandomFirstWord(uint256 tokenId) public view returns (string memory) {
     uint256 rand = random(string(abi.encodePacked("FIRST_WORD", Strings.toString(tokenId))));
@@ -103,7 +93,6 @@ contract MyEpicNFT is ERC721URIStorage {
   function makeAnEpicNFT() public {
     uint256 newItemId = _tokenIds.current();
 
-    // We go and randomly grab one word from each of the three arrays.
     string memory first = pickRandomFirstWord(newItemId);
     string memory second = pickRandomSecondWord(newItemId);
     string memory third = pickRandomThirdWord(newItemId);
@@ -114,7 +103,6 @@ contract MyEpicNFT is ERC721URIStorage {
 
     string memory finalSvg = string(abi.encodePacked(baseSvg, combinedWord, "</text></svg>"));
 
-    // Get all the JSON metadata in place and base64 encode it.
     string memory json = Base64.encode(
         bytes(
             string(
@@ -131,7 +119,6 @@ contract MyEpicNFT is ERC721URIStorage {
 
 
 
-    // Just like before, we prepend data:application/json;base64, to our data.
     string memory finalTokenUri = string(
         abi.encodePacked("data:application/json;base64,", json)
     );
