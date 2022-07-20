@@ -6,7 +6,7 @@ Project builded on Opensea Test server. So metamask must be on Rinkeby Test Serv
 
 NFT's basically provide lol composition. Top-Jungle-Mid-Adc-Support in that order
 
-# Here is the my first Smart Contract :)
+# Here is my first Smart Contract 
 
 View My Collection with OpenSea Test Server
 
@@ -15,7 +15,7 @@ https://testnets.opensea.io/collection/squarenft-ndif4uiwhd
 ![image](https://user-images.githubusercontent.com/92387865/166709193-22bc3b36-8b92-49a2-952b-2e4d8b7ee0b0.png)
 
 
-MINT Your NFT!
+MINT Your NFT! (on Rinkeby Test Sv)
 
 https://nft-starter-project.enesburakelmal.repl.co/
 
